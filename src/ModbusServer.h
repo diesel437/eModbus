@@ -18,8 +18,10 @@
 #include "ModbusMessage.h"
 
 #if USE_MUTEX
-using std::mutex;
-using std::lock_guard;
+  #ifndef PICO_RP2040
+    using std::mutex;
+    using std::lock_guard;
+  #endif
 #endif
 
 // Standard response variants for "no response" and "echo the request"

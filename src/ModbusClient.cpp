@@ -85,7 +85,8 @@ ModbusMessage ModbusClient::waitSync(uint8_t serverID, uint8_t functionCode, uin
   // Loop 60 seconds, if unlucky
   while (millis() - lostPatience < 60000) {
     {
-      LOCK_GUARD(lg, syncRespM);
+      CoreMutex lg(&syncRespM);
+      //LOCK_GUARD(lg, syncRespM);
       // Look for the token
       auto sR = syncResponse.find(token);
       // Is it there?

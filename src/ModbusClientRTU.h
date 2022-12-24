@@ -84,7 +84,11 @@ protected:
   void isInstance() { return; }   // make class instantiable
   queue<RequestEntry> requests;   // Queue to hold requests to be processed
   #if USE_MUTEX
-  mutex qLock;                    // Mutex to protect queue
+    #ifdef PICO_RP2040
+      mutex_t qLock;
+    #else
+      mutex qLock;                    // Mutex to protect queue
+    #endif
   #endif
   HardwareSerial& MR_serial;      // Ptr to the serial interface used
   unsigned long MR_lastMicros;    // Microseconds since last bus activity

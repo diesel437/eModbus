@@ -12,17 +12,21 @@
 
 #if HAS_FREERTOS
 extern "C" {
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+#include <FreeRTOS.h>
+#include <task.h>
 }
 #elif IS_LINUX
 #include <pthread.h>
 #endif
 
 #if USE_MUTEX
-#include <mutex>                    // NOLINT
-using std::mutex;
-using std::lock_guard;
+  #ifdef PICO_RP2040
+    #include <pico/mutex.h>
+  #else
+    #include <mutex>                    // NOLINT
+    using std::mutex;
+    using std::lock_guard;
+  #endif
 #endif
 
 typedef std::function<void(ModbusMessage msg, uint32_t token)> MBOnData;
@@ -31,6 +35,7 @@ typedef std::function<void(ModbusMessage msg, uint32_t token)> MBOnResponse;
 
 class ModbusClient {
 public:
+
   bool onDataHandler(MBOnData handler);   // Accept onData handler 
   bool onErrorHandler(MBOnError handler); // Accept onError handler 
   bool onResponseHandler(MBOnResponse handler); // Accept onResponse handler 
@@ -106,8 +111,13 @@ protected:
   static uint16_t instanceCounter; // Number of ModbusClients created
   std::map<uint32_t, ModbusMessage> syncResponse; // Map to hold response messages on synchronous requests
 #if USE_MUTEX
-  std::mutex syncRespM;            // Mutex protecting syncResponse map against race conditions
-  std::mutex countAccessM;         // Mutex protecting access to the message and error counts
+  #ifdef PICO_RP2040
+    mutex_t syncRespM;
+    mutex_t countAccessM;
+  #else
+    std::mutex syncRespM;            // Mutex protecting syncResponse map against race conditions
+    std::mutex countAccessM;         // Mutex protecting access to the message and error counts
+  #endif
 #endif
 
   // Let any ModbusBridge class use protected members

@@ -55,8 +55,10 @@ ModbusClientRTU::~ModbusClientRTU() {
 
 // begin: start worker task
 void ModbusClientRTU::begin(int coreID, uint32_t interval) {
+#ifndef PICO_RP2040
   // Only start worker if HardwareSerial has been initialized!
   if (MR_serial.baudRate()) {
+#endif
     // Pull down RTS toggle, if necessary
     MTRSrts(LOW);
 
@@ -70,12 +72,18 @@ void ModbusClientRTU::begin(int coreID, uint32_t interval) {
     char taskName[18];
     snprintf(taskName, 18, "Modbus%02XRTU", instanceCounter);
     // Start task to handle the queue
+#ifdef PICO_RP2040
+  xTaskCreateAffinitySet((TaskFunction_t)&handleConnection, taskName, 4096, this, 6, coreID >= 0 ? coreID : 0, &worker);
+#else
     xTaskCreatePinnedToCore((TaskFunction_t)&handleConnection, taskName, 4096, this, 6, &worker, coreID >= 0 ? coreID : NULL);
+#endif
 
     LOG_D("Worker task %d started. Interval=%d\n", (uint32_t)worker, MR_interval);
+#ifndef PICO_RP2040
   } else {
     LOG_E("Worker task could not be started! HardwareSerial not initialized?\n");
   }
+#endif
 }
 
 // end: stop worker task

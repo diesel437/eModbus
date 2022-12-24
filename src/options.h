@@ -27,6 +27,16 @@
 #define IS_LINUX 0
 #define NEED_UART_PATCH 0
 
+#elif defined(PICO_RP2040)
+#include <pico/mutex.h>
+#include <Arduino.h>
+#include <string>
+#define USE_MUTEX 1
+#define HAS_FREERTOS 1
+#define HAS_ETHERNET 0
+#define IS_LINUX 0
+#define NEED_UART_PATCH 0
+
 /* === LINUX DEFINITIONS AND MACROS === */
 #elif defined(__linux__)
 #define USE_MUTEX 1
@@ -55,7 +65,13 @@ typedef std::chrono::steady_clock clk;
 
 /* === COMMON MACROS === */
 #if USE_MUTEX
+
+#include <FreeRTOS.h>
+#ifdef PICO_RP2040
+#define LOCK_GUARD(x,y) CoreMutex x(&y);
+#else
 #define LOCK_GUARD(x,y) std::lock_guard<std::mutex> x(y);
+#endif
 #else
 #define LOCK_GUARD(x,y)
 #endif

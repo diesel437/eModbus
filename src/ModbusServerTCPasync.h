@@ -2,6 +2,8 @@
 // eModbus: Copyright 2020 by Michael Harwerth, Bert Melis and the contributors to eModbus
 //               MIT license - see license.md for details
 // =================================================================================================
+#ifndef PICO_RP2040
+
 #ifndef _MODBUS_SERVER_TCP_ASYNC_H
 #define _MODBUS_SERVER_TCP_ASYNC_H
 
@@ -88,5 +90,6 @@ class ModbusServerTCPasync : public ModbusServer {
   std::mutex cListLock;  // client list protection
   #endif
 };
+#endif
 
 #endif

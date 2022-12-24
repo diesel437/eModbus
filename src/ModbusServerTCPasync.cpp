@@ -3,6 +3,8 @@
 //               MIT license - see license.md for details
 // =================================================================================================
 
+#ifndef PICO_RP2040
+
 #include "ModbusServerTCPasync.h"
 #define LOCAL_LOG_LEVEL LOG_LEVEL_VERBOSE
 // #undef LOCAL_LOG_LEVEL
@@ -266,3 +268,5 @@ void ModbusServerTCPasync::onClientDisconnect(mb_client* client) {
   delete client;
   LOG_D("nr clients: %d\n", clients.size());
 }
+
+#endif

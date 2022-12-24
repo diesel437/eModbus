@@ -2,6 +2,8 @@
 // eModbus: Copyright 2020 by Michael Harwerth, Bert Melis and the contributors to eModbus
 //               MIT license - see license.md for details
 // =================================================================================================
+#ifndef PICO_RP2040
+
 #include "ModbusClientTCP.h"
 
 #if HAS_FREERTOS || IS_LINUX
@@ -404,5 +406,8 @@ ModbusMessage ModbusClientTCP::receive(RequestEntry *request) {
   }
   return response;
 }
+
+#endif
+
 
 #endif

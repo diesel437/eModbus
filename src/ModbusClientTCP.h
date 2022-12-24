@@ -2,6 +2,8 @@
 // eModbus: Copyright 2020 by Michael Harwerth, Bert Melis and the contributors to eModbus
 //               MIT license - see license.md for details
 // =================================================================================================
+#ifndef PICO_RP2040
+
 #ifndef _MODBUS_CLIENT_TCP_H
 #define _MODBUS_CLIENT_TCP_H
 
@@ -187,3 +189,5 @@ protected:
 #endif  // HAS_FREERTOS
 
 #endif  // INCLUDE GUARD
+
+#endif

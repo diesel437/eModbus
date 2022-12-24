@@ -105,9 +105,13 @@ void RTUutils::addCRC(ModbusMessage& raw) {
 uint32_t RTUutils::calculateInterval(HardwareSerial& s, uint32_t overwrite) {
   uint32_t interval = 0;
 
+#ifdef PICO_RP2040
+  interval = 1750; //use lower limit since we cannot retrieve current baudrate from here
+#else
   // silent interval is at least 3.5x character time
   interval = 35000000UL / s.baudRate();  // 3.5 * 10 bits * 1000 µs * 1000 ms / baud
   if (interval < 1750) interval = 1750;       // lower limit according to Modbus RTU standard
+#endif
   // User overwrite?
   if (overwrite > interval) {
     interval = overwrite;

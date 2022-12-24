@@ -2,6 +2,9 @@
 // eModbus: Copyright 2020 by Michael Harwerth, Bert Melis and the contributors to eModbus
 //               MIT license - see license.md for details
 // =================================================================================================
+
+#ifndef PICO_RP2040
+
 #include "ModbusClientTCPasync.h"
 #define LOCAL_LOG_LEVEL LOG_LEVEL_VERBOSE
 // #undef LOCAL_LOG_LEVEL
@@ -387,3 +390,5 @@ bool ModbusClientTCPasync::send(RequestEntry* re) {
   }
   return false;
 }
+
+#endif

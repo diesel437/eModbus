@@ -15,8 +15,8 @@
 #include "RTUutils.h"
 
 extern "C" {
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+  #include <FreeRTOS.h>
+  #include <task.h>
 }
 
 // Specal function signature for broadcast or sniffer listeners

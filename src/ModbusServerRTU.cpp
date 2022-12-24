@@ -72,8 +72,10 @@ bool ModbusServerRTU::start(int coreID, uint32_t interval) {
     LOG_D("Server task was running - stopped.\n");
   }
 
+#ifndef PICO_RP2040 //No way to identify if serial has started using arduino pico framework
   // start only if serial interface is initialized!
   if (MSRserial.baudRate()) {
+#endif
     // Set minimum interval time
     MSRinterval = RTUutils::calculateInterval(MSRserial, interval);
 
@@ -85,13 +87,20 @@ bool ModbusServerRTU::start(int coreID, uint32_t interval) {
     snprintf(taskName, 18, "MBsrv%02XRTU", instanceCounter);
 
     // Start task to handle the client
+  #if defined(PICO_RP2040)
+    xTaskCreateAffinitySet((TaskFunction_t)&serve, taskName, 4096, this, 8, coreID >= 0 ? coreID : 0, &serverTask);
+  #else
     xTaskCreatePinnedToCore((TaskFunction_t)&serve, taskName, 4096, this, 8, &serverTask, coreID >= 0 ? coreID : NULL);
+  #endif
+
 
     LOG_D("Server task %d started. Interval=%d\n", (uint32_t)serverTask, MSRinterval);
+#ifndef PICO_RP2040
   } else {
     LOG_E("Server task could not be started. HardwareSerial not initialized?\n");
     return false;
   }
+#endif
 
   return true;
 }
