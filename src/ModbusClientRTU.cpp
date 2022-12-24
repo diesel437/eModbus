@@ -73,7 +73,7 @@ void ModbusClientRTU::begin(int coreID, uint32_t interval) {
     snprintf(taskName, 18, "Modbus%02XRTU", instanceCounter);
     // Start task to handle the queue
 #ifdef PICO_RP2040
-  xTaskCreateAffinitySet((TaskFunction_t)&handleConnection, taskName, 4096, this, 6, coreID >= 0 ? coreID : 0, &worker);
+  xTaskCreateAffinitySet((TaskFunction_t)&handleConnection, taskName, 4096, this, 6, coreID >= 0 && coreID <= 1 ? coreID : 0, &worker);
 #else
     xTaskCreatePinnedToCore((TaskFunction_t)&handleConnection, taskName, 4096, this, 6, &worker, coreID >= 0 ? coreID : NULL);
 #endif

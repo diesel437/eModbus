@@ -4,6 +4,10 @@
 // =================================================================================================
 #include "Logging.h"
 #include <cinttypes>
+#ifdef PICO_RP2040
+  #include <SerialPIO.h>
+  extern SerialPIO Serial4;
+#endif
 
 int MBUlogLvl = LOG_LEVEL;
 #if IS_LINUX
@@ -11,7 +15,7 @@ int MBUlogLvl = LOG_LEVEL;
 
 void logHexDump(const char *letter, const char *label, const uint8_t *data, const size_t length) {
 #else
-Print *LOGDEVICE = &Serial;
+Print *LOGDEVICE = &Serial4;
 #define PrintOut output->printf
 
 void logHexDump(Print *output, const char *letter, const char *label, const uint8_t *data, const size_t length) {
