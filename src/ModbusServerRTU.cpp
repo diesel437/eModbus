@@ -88,7 +88,7 @@ bool ModbusServerRTU::start(int coreID, uint32_t interval) {
 
     // Start task to handle the client
   #if defined(PICO_RP2040)
-    xTaskCreateAffinitySet((TaskFunction_t)&serve, taskName, 4096, this, 8, coreID >= 0 ? coreID : 0, &serverTask);
+    xTaskCreateAffinitySet((TaskFunction_t)&serve, taskName, 4096, this, 8, coreID >= 0 && coreID <= 1 ? coreID : 0, &serverTask);
   #else
     xTaskCreatePinnedToCore((TaskFunction_t)&serve, taskName, 4096, this, 8, &serverTask, coreID >= 0 ? coreID : NULL);
   #endif

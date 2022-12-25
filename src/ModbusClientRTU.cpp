@@ -144,7 +144,7 @@ uint32_t ModbusClientRTU::pendingRequests() {
 Error ModbusClientRTU::addRequestM(ModbusMessage msg, uint32_t token) {
   Error rc = SUCCESS;        // Return value
 
-  LOG_D("request for %02X/%02X\n", msg.getServerID(), msg.getFunctionCode());
+  LOG_D("Request for %02X/%02X\n", msg.getServerID(), msg.getFunctionCode());
 
   // Add it to the queue, if valid
   if (msg) {
